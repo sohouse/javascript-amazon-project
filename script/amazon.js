@@ -1,4 +1,4 @@
-import {carts} from '../data/cart.js';
+import {carts, addToCart, showAddedTip, updateCartCount} from '../data/cart.js';
 import {products} from '../data/products.js';
 
 let productsGrid = document.querySelector('.products-grid');
@@ -62,27 +62,19 @@ productsGrid.innerHTML = productContent;
 document.querySelectorAll('.add-to-cart-button').forEach(btn => {
     btn.addEventListener('click', () => {
         let productId = btn.dataset.productId;
-        let selectClassName = '.js-quantity-selector-' + productId;
-        let selectedQuantity = Number(document.querySelector(selectClassName).value);
-        let addedCart = document.querySelector('.js-added-to-cart-'+productId);
+        let selectedQuantity = Number(document.querySelector('.js-quantity-selector-' + productId).value);
+        let addedCart = document.querySelector('.js-added-to-cart-' + productId);
 
-        carts[productId] = productId in carts ? carts[productId] + selectedQuantity : selectedQuantity;
-        addedCart.style.opacity = 1;
-        setTimeout(() => {
-            addedCart.style.transition = 'opacity 0.2s';
-            addedCart.style.opacity = 0;
-        }, 1000)
+        // 添加购物车
+        addToCart(productId, selectedQuantity);
+        // 显示添加成功提示
+        showAddedTip(addedCart);
+        // 刷新购物车总数量
         updateCartCount();
     });
 });
 
 updateCartCount();
-
-function updateCartCount() {
-    document.querySelector('.cart-quantity').innerText = (() => {
-        return Object.keys(carts).length;
-    })();
-}
 
 // // 创建无原型的纯净对象（无 __proto__/toString 等内置属性）
 // const testMap = Object.create(null);
