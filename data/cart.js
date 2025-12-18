@@ -1,0 +1,1 @@
+export let carts = Object.create(null);
