@@ -1,4 +1,4 @@
 
 export function fixedAmount(amount, fixedNum) {
-    return (amount / 100).toFixed(fixedNum);
+    return (Math.round(amount) / 100).toFixed(fixedNum);
 }

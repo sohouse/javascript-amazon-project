@@ -82,7 +82,11 @@
 
       // Test case 5: Amount with rounding
       const result5 = fixedAmount(999, 2);
-      assertEquals(result5, '9.99', 'fixedAmount(999, 2) should return "9.99"');
+      assertEquals(result5, '9.99', 'fixedAmount(9999, 2) should return "9.99"');
+
+      // Test case 5: Amount with rounding
+      const result6 = fixedAmount(2000.4, 2);
+      assertEquals(result6, '20.00', 'fixedAmount(2000.4, 2) should return "20.00"');
       
       // Display summary
       const passedTests = testResults.filter(t => t.passed).length;
