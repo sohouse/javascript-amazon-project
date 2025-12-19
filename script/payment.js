@@ -40,12 +40,12 @@ function calcPaymentAmount() {
 
 function updatePaymentInfo() {
     document.querySelector('.js-product-quantity').innerText = paymentObj.productSize;
-    document.querySelector('.js-product-amount').innerText = fixedAmount(paymentObj.productAmount, 2);
-    document.querySelector('.js-shipping-amount').innerText = fixedAmount(paymentObj.shippingAmount, 2);
-    document.querySelector('.js-before-tax-amount').innerText = fixedAmount(paymentObj.noTaxAmount, 2);
+    document.querySelector('.js-product-amount').innerText = '$' + fixedAmount(paymentObj.productAmount, 2);
+    document.querySelector('.js-shipping-amount').innerText = '$' + fixedAmount(paymentObj.shippingAmount, 2);
+    document.querySelector('.js-before-tax-amount').innerText = '$' + fixedAmount(paymentObj.noTaxAmount, 2);
     document.querySelector('.js-tax-rate').innerText = paymentObj.taxRate * 100;
-    document.querySelector('.js-tax-amount').innerText = fixedAmount(paymentObj.taxFee, 2);
-    document.querySelector('.js-order-amount').innerText = fixedAmount(paymentObj.orderAmount, 2);
-    document.querySelector('.js-product-amount').innerText = fixedAmount(paymentObj.productAmount, 2);
+    document.querySelector('.js-tax-amount').innerText = '$' + fixedAmount(paymentObj.taxFee, 2);
+    document.querySelector('.js-order-amount').innerText = '$' + fixedAmount(paymentObj.orderAmount, 2);
+    document.querySelector('.js-product-amount').innerText = '$' + fixedAmount(paymentObj.productAmount, 2);
 
 }
