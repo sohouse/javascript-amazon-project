@@ -11,6 +11,6 @@ export function load(key) {
 function initCarts() {
     let carts = localStorage.getItem('carts');
     if (carts === null) {
-        save('carts', null);
+        save('carts', Object.create(null));
     }
 }

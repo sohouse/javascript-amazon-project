@@ -1,31 +1,24 @@
-import {deleteCartItem, getCartCount} from './cart.js';
-import {products} from '../data/products.js';
+import {deleteCartItem, getAllCarts, getCartCount, updateCartItem} from './cart.js';
+import {getAllProductsMap} from '../data/products.js';
 import {fixedAmount} from './util/money.js';
-import {load} from './util/storage.js';
-
-let productMap = new Map();
+import {paymentInfo} from './payment.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    transformProducts();
     pageInit();
     addDeleteListener();
+    addUpdateListener();
     updateCartQuantity();
 });
-
-function transformProducts() {
-    products.forEach(product => {
-        productMap.set(product.id, product);
-    });
-}
 
 function pageInit() {
     let continer = document.querySelector('.order-summary');
     let continerInnerText = '';
-    let carts = load('carts');
+    let carts = getAllCarts();
     if (carts === null) return;
+    let products = getAllProductsMap();
 
     Object.keys(carts).forEach(productId => {
-        let currentProduct = productMap.get(productId);
+        let currentProduct = products.get(productId);
         continerInnerText += `
             <div class="cart-item-container js-cart-item-continer-${productId}">
                 <div class="delivery-date">
@@ -45,9 +38,9 @@ function pageInit() {
                     </div>
                     <div class="product-quantity">
                       <span>
-                        Quantity: <span class="quantity-label">${carts[productId]}</span>
+                        Quantity: <input class="quantity-label js-quantity-label-${productId} cart-quantity-label-style" value="${carts[productId]}" readonly />
                       </span>
-                      <span class="update-quantity-link link-primary">
+                      <span class="update-quantity-link link-primary js-update-quantity" data-product-id="${productId}">
                         Update
                       </span>
                       <span class="delete-quantity-link link-primary js-delete-cart-item" data-product-id="${productId}">
@@ -111,7 +104,8 @@ function addDeleteListener() {
         del.addEventListener('click', () => {
             let productId = del.dataset.productId;
             deleteCartItem(productId);
-            removeCartItem(productId);
+            paymentInfo();
+            removeCartItemElement(productId);
             updateCartQuantity();
         })
     });
@@ -123,7 +117,37 @@ function updateCartQuantity() {
     })();
 }
 
-function removeCartItem(productId) {
+function removeCartItemElement(productId) {
     let orderSummary = document.querySelector('.js-cart-item-continer-' + productId);
     orderSummary.remove();
+}
+
+function addUpdateListener() {
+    document.querySelectorAll('.js-update-quantity').forEach(update => {
+        update.addEventListener('click', () => {
+            let productId = update.dataset.productId;
+            let quantityLabel = document.querySelector('.js-quantity-label-' + productId);
+            /*
+            switch edit status when the input element contains 'cart-quantity-label-style' class
+            otherwise turn to display status
+            change readOnly attribute when switch input and span status
+            */
+            if (quantityLabel.classList.contains('cart-quantity-label-style')) {
+                quantityLabel.classList.replace('cart-quantity-label-style', 'cart-quantity-input-style');
+                quantityLabel.readOnly = false;
+                update.innerText = 'Save';
+            } else {
+                let newQuantity = Number(quantityLabel.value);
+                if (newQuantity !== NaN && newQuantity > 0) {
+                    quantityLabel.classList.replace('cart-quantity-input-style', 'cart-quantity-label-style');
+                    quantityLabel.readOnly = true;
+                    update.innerText = 'Update';
+                    updateCartItem(productId, newQuantity);
+                    paymentInfo();
+                } else {
+                    window.alert('WRONG NUMBER!');
+                }
+            }
+        });
+    });
 }

@@ -1,7 +1,6 @@
-import {addToCart, showAddedTip, getCartCount} from './cart.js';
-import {products} from '../data/products.js';
+import {addToCart, getCartCount} from './cart.js';
+import {getAllProductsMap} from '../data/products.js';
 import {fixedAmount} from './util/money.js';
-import * as storage from "./util/storage.js";
 
 let productsGrid = document.querySelector('.products-grid');
 let productContent = '';
@@ -15,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function pageInit() {
-    products.forEach(product => {
+    getAllProductsMap().forEach(product => {
         productContent += `
             <div class="product-container">
               <div class="product-image-container">
@@ -91,6 +90,14 @@ function addCartProcessor(productId, quantity, tipElement) {
     document.querySelector('.cart-quantity').innerText = (() => {
         return getCartCount();
     })();
+}
+
+function showAddedTip(element) {
+    element.style.opacity = 1;
+    setTimeout(() => {
+        element.style.transition = 'opacity 0.2s';
+        element.style.opacity = 0;
+    }, 1000)
 }
 
 // // 创建无原型的纯净对象（无 __proto__/toString 等内置属性）
